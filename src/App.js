@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
-
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+import React, { Component } from "react";
+import countries from "./countries.json";
+import CountryList from "./components/countryListComponent";
+import Navbar from "./components/navBar";
+class App extends Component {
+  state = { countries: countries, selectedOption: "select" };
+  onChangeSelect = (value) => {
+    const selectedCountries =
+      value !== "select"
+        ? countries.reduce((acc, curr) => {
+            if (curr.region === value) {
+              acc.push(curr);
+            }
+            return acc;
+          }, [])
+        : countries;
+    this.setState({ selectedOption: value, countries: selectedCountries });
+  };
+  render() {
+    return (
+      <div>
+        <nav style={{ width: "100%", textAlign: "center" }}>
+          <Navbar
+            countries={countries}
+            selectedOption={this.state.selectedOption}
+            onChangeSelect={this.onChangeSelect}
+          />
+        </nav>
+        <CountryList countries={this.state.countries} />
+      </div>
+    );
+  }
 }
 
 export default App;
